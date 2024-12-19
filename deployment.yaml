@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gke-cicd-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: gke-cicd-app
+  template:
+    metadata:
+      labels:
+        app: gke-cicd-app
+    spec:
+      containers:
+      - name: gke-cicd-app
+        image: gcr.io/[PROJECT_ID]/gke-cicd-app
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gke-cicd-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: gke-cicd-app
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
